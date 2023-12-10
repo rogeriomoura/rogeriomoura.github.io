@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Idle Monster Battler</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Idle Monster Battler</h1>
+
+    <div id="monster-info">
+      <h2>Monster Name</h2>
+      <p>Level: <span id="monster-level">1</span></p>
+      <p>Health: <span id="monster-health">10/10</span></p>
+      <p>Attack: <span id="monster-attack">5</span></p>
+      <p>Experience: <span id="monster-experience">0</span></p>
+    </div>
+
+    <div>
+      <p>Points: <span id="monster-points">0</span></p>
+      <button id="train-attack" onclick="trainAttack()" disabled>
+        Train Attack (2 points)
+      </button>
+      <button id="train-health" onclick="trainHealth()" disabled>
+        Train Health (1 points)
+      </button>
+      <button id="heal" onclick="heal()" disabled>Heal (3 points)</button>
+    </div>
+    <div>
+      <button onclick="fight()">Fight</button>
+      <button onclick="clearMonster()">Reset Monster</button>
+    </div>
+
+    <div id="game-log"></div>
+
+    <script>
+      const newMonster = {
+        name: 'Monster',
+        level: 1,
+        health: 10,
+        maxHealth: 10,
+        attack: 5,
+        experience: 0,
+        experienceToLevelUp: 10,
+        points: 0,
+      };
+      // Function to clear monster data from storage and create a new monster
+      function clearMonster() {
+        localStorage.removeItem('monster');
+        monster = createNewMonster();
+        updateMonsterInfo();
+      }
+
+      // Function to load monster data from storage or create a new monster
+      function loadMonster() {
+        const savedMonster = JSON.parse(localStorage.getItem('monster'));
+        return savedMonster || createNewMonster();
+      }
+
+      // Function to save monster data to storage
+      function saveMonster() {
+        localStorage.setItem('monster', JSON.stringify(monster));
+      }
+
+      // Function to create a new monster with default stats
+      function createNewMonster() {
+        return { ...newMonster };
+      }
+
+      // Define initial monster state by loading from storage or creating a new one
+      let monster = loadMonster();
+
+      // Set up game loop interval (update every 1000 milliseconds or 1 second)
+      const gameLoopInterval = setInterval(gameLoop, 500);
+
+      // Function to handle the game loop
+      function gameLoop() {
+        // Simulate passive income or automatic training over time
+        monster.experience += 1;
+
+        // Check for level up
+        if (monster.experience >= monster.experienceToLevelUp) {
+          levelUp();
+        }
+
+        // Check for defeat
+        if (monster.health <= 0) {
+          resetGame();
+        }
+
+        checkForPoints();
+        updateMonsterInfo();
+        saveMonster();
+      }
+
+      // Function to check for points to spend
+      function checkForPoints() {
+        if (monster.points > 0) {
+          if (monster.points >= 2) {
+            document.getElementById('train-attack').disabled = false;
+          } else {
+            document.getElementById('train-attack').disabled = true;
+          }
+          if (monster.points >= 3) {
+            document.getElementById('heal').disabled = false;
+          } else {
+            document.getElementById('heal').disabled = true;
+          }
+          document.getElementById('train-health').disabled = false;
+        } else {
+          document.getElementById('train-attack').disabled = true;
+          document.getElementById('train-health').disabled = true;
+          document.getElementById('heal').disabled = true;
+        }
+      }
+
+      // Function to train the monster attack
+      function trainAttack() {
+        monster.attack += 2;
+        monster.points -= 2;
+        updateMonsterInfo();
+      }
+
+      // Function to train the monster health
+      function trainHealth() {
+        monster.maxHealth += 5;
+        monster.health += 5;
+        monster.points -= 1;
+        updateMonsterInfo();
+      }
+
+      // Function to heal monster health
+      function heal() {
+        monster.health = monster.maxHealth;
+        monster.points -= 3;
+        updateMonsterInfo();
+      }
+
+      // Function to handle battles
+      function fight() {
+        const enemy = generateEnemy();
+        const result = performBattle(monster, enemy);
+
+        if (result === 'win') {
+          monster.experience += 5;
+          if (monster.experience >= monster.experienceToLevelUp) {
+            levelUp();
+          }
+        } else {
+          if (monster.health <= 0) {
+            // Player defeated
+            resetGame();
+          }
+        }
+
+        updateMonsterInfo();
+      }
+
+      // Function to generate a random enemy for battles
+      function generateEnemy() {
+        return {
+          name: 'Enemy',
+          level: monster.level,
+          health: monster.level * 5,
+          maxHealth: monster.level * 5,
+          attack: monster.level * 2,
+        };
+      }
+
+      // Function to perform a battle between the player's monster and an enemy
+      function performBattle(player, enemy) {
+        // perform a battle where each monster attacks the other and the one left with life wins
+        let round = 1;
+        while (player.health > 0 && enemy.health > 0) {
+          player.health -= enemy.attack;
+          enemy.health -= player.attack;
+          updateGameLog('Round ' + round++);
+          updateGameLog(
+            'Your monster attacked the enemy for ' +
+              player.attack +
+              ', Enemy health: ' +
+              enemy.health +
+              '/' +
+              enemy.maxHealth
+          );
+          updateGameLog(
+            'The enemy attacked your monster for ' +
+              enemy.attack +
+              ', Your monster health: ' +
+              player.health +
+              '/' +
+              player.maxHealth
+          );
+        }
+        if (player.health <= 0) {
+          return 'lose';
+        } else if (enemy.health <= 0) {
+          return 'win';
+        }
+      }
+
+      // Function to handle leveling up the monster
+      function levelUp() {
+        monster.level++;
+        monster.experience = 0;
+        monster.experienceToLevelUp *= 2;
+        monster.points += 5;
+        updateGameLog('Level up! Your monster is now level ' + monster.level);
+      }
+
+      // Function to update the displayed monster information
+      function updateMonsterInfo() {
+        document.getElementById('monster-level').textContent = monster.level;
+        document.getElementById('monster-health').textContent =
+          monster.health + '/' + monster.maxHealth;
+        document.getElementById('monster-attack').textContent = monster.attack;
+        document.getElementById('monster-experience').textContent =
+          monster.experience;
+        document.getElementById('monster-points').textContent = monster.points;
+      }
+
+      // Function to reset the game when the player is defeated
+      function resetGame() {
+        updateGameLog('Your monster was defeated! Restarting the game.');
+        monster = { ...newMonster };
+        updateMonsterInfo();
+      }
+
+      // Function to update the game log
+      function updateGameLog(message) {
+        const gameLog = document.getElementById('game-log');
+        gameLog.innerHTML = '<p>' + message + '</p>' + gameLog.innerHTML;
+        const allParagraphs = gameLog.getElementsByTagName('p');
+        while (allParagraphs.length > 10) {
+          gameLog.removeChild(allParagraphs[allParagraphs.length - 1]);
+        }
+      }
+
+      // Initial update of monster information
+      updateMonsterInfo();
+    </script>
+  </body>
+</html>
