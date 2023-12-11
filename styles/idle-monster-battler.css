@@ -1,0 +1,93 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+button {
+  font-family: 'Roboto', sans-serif;
+}
+
+#monster-info {
+  max-width: 500px;
+  border: 3px solid #999;
+  border-style: inset;
+  padding-left: 20px;
+  background: #ddd;
+}
+
+#monster-info > p {
+  font-size: 25px;
+  background: -webkit-linear-gradient(#eee, #678678);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #666;
+}
+
+#monster-info > p > span {
+  font-size: 40px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #666;
+}
+
+#monster-level {
+  background: -webkit-linear-gradient(#eee, #678678);
+}
+
+#monster-health {
+  background: -webkit-linear-gradient(#eee, red);
+}
+
+#monster-attack {
+  background: -webkit-linear-gradient(#eee, #ffe02a);
+}
+
+#monster-experience {
+  background: -webkit-linear-gradient(#eee, #a570bf);
+}
+
+#monster-points {
+  font-size: 35px;
+  background: -webkit-linear-gradient(#eee, black);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #333;
+}
+
+button {
+  background: none;
+  border: 3px solid red;
+  color: red;
+  text-transform: uppercase;
+  font-size: 20px;
+  padding: 5px 15px;
+  margin: 10px;
+  width: 100%;
+  max-width: 300px;
+  cursor: pointer;
+  transition: background 200ms;
+}
+
+button:disabled {
+  background: grey;
+  color: black;
+  border-color: grey;
+}
+
+button:hover:enabled {
+  background: red;
+  color: white;
+}
+
+#game-log > p {
+}
+
+body {
+  background: #eeeeee;
+}
