@@ -4,6 +4,11 @@ Idle Monster game experiment
 
 # Changelog:
 
+## v0.0.4 Release notes:
+
+- UI overhaul to make it more mobile friendly.
+- You can sacrifice your monster now to receive some permanent boosters.
+
 ## v0.0.3 Release notes:
 
 - Added a card view for the current enemy.
@@ -20,3 +25,9 @@ Idle Monster game experiment
 - Fixed some bugs with being able to click too fast and buy more upgrades than points available.
 - Added some styles from yours truly AceDoutry.
 - Points have been renamed to Monster Dollars foreshadowing pay-to-win features.
+
+# Ideas to implement:
+
+- Having more than 1 monster
+- Fight another player?
+- Buy equipment
