@@ -7,22 +7,31 @@
     <link rel="stylesheet" href="./styles/idle-monster-battler.css" />
   </head>
   <body>
-    <h1>Idle Monster Battler v.0.0.2</h1>
+    <h1>Idle Monster Battler v.0.0.3</h1>
 
-    <div id="monster-info">
-      <h2 id="monster-name">Monster Name</h2>
-      <p>Level: <span id="monster-level">1</span></p>
-      <p>Health: <span id="monster-health">10/10</span></p>
-      <p>Attack: <span id="monster-attack">5</span></p>
-      <p>Experience: <span id="monster-experience">0</span></p>
+    <div id="row">
+      <div id="monster-info">
+        <h2 id="monster-name">Monster Name</h2>
+        <p>Level: <span id="monster-level">1</span></p>
+        <p>Health: <span id="monster-health">10/10</span></p>
+        <p>Attack: <span id="monster-attack">5</span></p>
+        <p>Experience: <span id="monster-experience">0</span></p>
+        <p>Monster Dollars: $ <span id="monster-points">0</span></p>
+      </div>
+      <div id="enemy-info">
+        <h2 id="enemy-name">Current Enemy</h2>
+        <p>Level: <span id="enemy-level">1</span></p>
+        <p>Health: <span id="enemy-health">10/10</span></p>
+        <p>Attack: <span id="enemy-attack">5</span></p>
+        <p>Experience Given: <span id="enemy-experience">0</span></p>
+      </div>
     </div>
 
     <div>
-      <p>Monster Dollars: $<span id="monster-points">0</span></p>
-      <button id="train-attack" onclick="trainAttack()" disabled>
+      <button id="train-attack" onclick="evolveAttack()" disabled>
         Evolve Attack ($2)
       </button>
-      <button id="train-health" onclick="trainHealth()" disabled>
+      <button id="train-health" onclick="evolveHealth()" disabled>
         Evolve Health ($1)
       </button>
       <button id="heal" onclick="heal()" disabled>Heal ($3)</button>
