@@ -20,3 +20,10 @@ Idle Monster game experiment
 - Fixed some bugs with being able to click too fast and buy more upgrades than points available.
 - Added some styles from yours truly AceDoutry.
 - Points have been renamed to Monster Dollars foreshadowing pay-to-win features.
+
+# Ideas to implement:
+
+- Having more than 1 monster
+- Augmentations by resetting the monster
+- Fight another player?
+- Buy equipment
