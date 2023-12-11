@@ -7,22 +7,13 @@ const newMonster = {
   experience: 0,
   experienceToLevelUp: 10,
   points: 0,
-  currentEnemyLevel: 1,
-};
-
-const newEnemy = {
-  name: `Enemy Lvl. ${newMonster.currentEnemyLevel}`,
-  level: newMonster.currentEnemyLevel,
-  health: newMonster.currentEnemyLevel * 5,
-  attack: newMonster.currentEnemyLevel * 2,
-  experienceGiven: newMonster.currentEnemyLevel * 5,
+  enemyLevel: 1,
 };
 
 function resetMonster() {
   if (confirm('Are you sure you want to reset your monster?')) {
     localStorage.removeItem('monster');
     monster = createNewMonster();
-    enemyLevel = 1;
     updateMonsterInfo();
   }
 }
@@ -61,6 +52,7 @@ function gameLoop() {
 
   checkForPoints();
   updateMonsterInfo();
+  updateEnemyInfo();
   saveMonster();
 }
 
@@ -85,21 +77,20 @@ function checkForPoints() {
   }
 }
 
-// Function to train the monster attack
-function trainAttack() {
+function evolveAttack() {
   if (monster.points >= 2) {
     monster.points -= 2;
-    monster.attack += 2;
+    monster.attack += 2 + Math.round(monster.level * 0.5);
     updateMonsterInfo();
   }
 }
 
-// Function to train the monster health
-function trainHealth() {
+function evolveHealth() {
   if (monster.points >= 1) {
+    const healthIncrease = 5 + Math.round(monster.level * 0.5);
     monster.points -= 1;
-    monster.maxHealth += 5;
-    monster.health += 5;
+    monster.maxHealth += healthIncrease;
+    monster.health += healthIncrease;
     updateMonsterInfo();
   }
 }
@@ -115,44 +106,43 @@ function heal() {
 
 // Function to handle battles
 function fight() {
-  const enemy = generateEnemy();
-  const result = performBattle(monster, enemy);
-
+  const enemy = generateEnemy(monster.enemyLevel);
+  const result = performBattle(enemy);
   if (result === 'win') {
-    monster.experience += 5;
-    if (monster.experience >= monster.experienceToLevelUp) {
-      levelUp();
+    monster.experience += enemy.experienceGiven;
+    monster.enemyLevel++;
+    if (Math.random() > 0.55) {
+      monster.health = monster.maxHealth;
+      updateGameLog(
+        'Your monster ATE the enemy and fully recovered from the fight!'
+      );
     }
   } else {
-    if (monster.health <= 0) {
-      // Player defeated
-      resetGame();
-    }
+    resetGame();
   }
-
   updateMonsterInfo();
 }
 
-// Function to generate a random enemy for battles
-function generateEnemy() {
+function generateEnemy(enemyLevel) {
   return {
-    name: 'Enemy',
-    level: monster.level,
-    health: monster.level * 5,
-    maxHealth: monster.level * 5,
-    attack: monster.level * 2,
+    name: `Enemy Lvl. ${enemyLevel}`,
+    level: enemyLevel,
+    health: enemyLevel * 5,
+    maxHealth: enemyLevel * 5,
+    attack: enemyLevel * 2,
+    experienceGiven: enemyLevel * 5 + monster.level * 5,
   };
 }
 
-function performBattle(player, enemy) {
+function performBattle(enemy) {
   let round = 1;
-  while (player.health > 0 && enemy.health > 0) {
-    player.health -= enemy.attack;
-    enemy.health -= player.attack;
+  while (monster.health > 0 && enemy.health > 0) {
+    monster.health -= enemy.attack;
+    enemy.health -= monster.attack;
     updateGameLog('Round ' + round++);
     updateGameLog(
       'Your monster attacked the enemy for ' +
-        player.attack +
+        monster.attack +
         ', Enemy health: ' +
         enemy.health +
         '/' +
@@ -162,12 +152,12 @@ function performBattle(player, enemy) {
       'The enemy attacked your monster for ' +
         enemy.attack +
         ', Your monster health: ' +
-        player.health +
+        monster.health +
         '/' +
-        player.maxHealth
+        monster.maxHealth
     );
   }
-  if (player.health <= 0) {
+  if (monster.health <= 0) {
     return 'lose';
   } else if (enemy.health <= 0) {
     return 'win';
@@ -176,6 +166,9 @@ function performBattle(player, enemy) {
 
 function levelUp() {
   monster.level++;
+  monster.health += monster.level;
+  monster.maxHealth += monster.level;
+  monster.attack += monster.level;
   monster.experience = 0;
   monster.experienceToLevelUp *= 2;
   monster.points += 5;
@@ -191,6 +184,15 @@ function updateMonsterInfo() {
   document.getElementById('monster-experience').textContent =
     monster.experience + '/' + monster.experienceToLevelUp;
   document.getElementById('monster-points').textContent = monster.points;
+}
+
+function updateEnemyInfo() {
+  const enemy = generateEnemy(monster.enemyLevel);
+  document.getElementById('enemy-level').textContent = enemy.level;
+  document.getElementById('enemy-health').textContent = enemy.health;
+  document.getElementById('enemy-attack').textContent = enemy.attack;
+  document.getElementById('enemy-experience').textContent =
+    enemy.experienceGiven;
 }
 
 function resetGame() {
@@ -218,3 +220,4 @@ function renameMonster() {
 
 // Initial update of monster information
 updateMonsterInfo();
+updateEnemyInfo();
