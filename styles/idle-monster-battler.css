@@ -10,17 +10,23 @@ button {
   font-family: 'Roboto', sans-serif;
 }
 
+h1,
+h3 {
+  text-align: center;
+}
+
 #monster-info,
 #enemy-info {
   max-width: 500px;
   border: 3px solid #999;
   border-style: inset;
-  padding-left: 20px;
+  padding: 10px;
   background: #ddd;
-  padding-right: 64px;
+  margin: 4px;
 }
 
 #monster-info > p,
+#monster-info > #stat-row > p,
 #enemy-info > p {
   font-size: 25px;
   background: -webkit-linear-gradient(#eee, #678678);
@@ -28,11 +34,13 @@ button {
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: #666;
+  margin: 8px 0px;
 }
 
 #monster-info > p > span,
+#monster-info > #stat-row > p > span,
 #enemy-info > p > span {
-  font-size: 40px;
+  font-size: 35px;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke-width: 2px;
@@ -71,8 +79,10 @@ button {
   font-size: 20px;
   padding: 5px 15px;
   margin: 10px;
-  width: 100%;
-  max-width: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   transition: background 200ms;
 }
@@ -88,14 +98,42 @@ button:hover:enabled {
   color: white;
 }
 
+#monster-info > #stat-row > button {
+  max-width: fit-content;
+  padding: 3px 9px;
+  margin: 3px;
+}
+
+.icon {
+  font-size: 30px;
+}
+
+#game-log {
+  max-width: 500px;
+  max-height: fit-content;
+  border: 3px solid #999;
+  border-style: inset;
+  padding: 10px;
+  background: #ddd;
+  margin: 10px auto;
+}
+
 #game-log > p {
+  text-align: center;
 }
 
 #row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-evenly;
+}
+
+#stat-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 body {

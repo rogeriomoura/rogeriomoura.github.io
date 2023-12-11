@@ -21,14 +21,25 @@
     <link rel="stylesheet" href="./styles/idle-monster-battler.css" />
   </head>
   <body>
-    <h1>Idle Monster Battler v.0.0.3</h1>
+    <h1>Idle Monster Battler v.0.0.4</h1>
 
     <div id="row">
       <div id="monster-info">
         <h2 id="monster-name">Monster Name</h2>
         <p>Level: <span id="monster-level">1</span></p>
-        <p>Health: <span id="monster-health">10/10</span></p>
-        <p>Attack: <span id="monster-attack">5</span></p>
+        <div id="stat-row">
+          <p>Health: <span id="monster-health">10/10</span></p>
+          <button id="heal" onclick="heal()" disabled><span class="icon">&#x2661</span> ($3)</button>
+          <button id="train-health" onclick="evolveHealth()" disabled>
+            <span class="icon">&#x21E7</span> ($1)
+          </button>
+        </div>
+        <div id="stat-row">
+          <p>Attack: <span id="monster-attack">5</span></p>
+          <button id="train-attack" onclick="evolveAttack()" disabled>
+            <span class="icon">&#x21E7</span> ($2)
+          </button>
+        </div>
         <p>Experience: <span id="monster-experience">0</span></p>
         <p>Monster Dollars: $ <span id="monster-points">0</span></p>
       </div>
@@ -40,20 +51,25 @@
         <p>Experience Given: <span id="enemy-experience">0</span></p>
       </div>
     </div>
-
-    <div>
-      <button id="train-attack" onclick="evolveAttack()" disabled>
-        Evolve Attack ($2)
-      </button>
-      <button id="train-health" onclick="evolveHealth()" disabled>
-        Evolve Health ($1)
-      </button>
-      <button id="heal" onclick="heal()" disabled>Heal ($3)</button>
-    </div>
-    <div>
+    <div id="row">
       <button onclick="fight()">Fight</button>
       <button onclick="resetMonster()">Reset Monster</button>
       <button onclick="renameMonster()">Rename Monster</button>
+    </div>
+    <h3>Sacrifice your monster for increased rate: ($25)</h3>
+    <div id="row">
+      <button class="sacrifice" onclick="sacrificeMonster('xpModifier')">
+        XP rate
+      </button>
+      <button class="sacrifice" onclick="sacrificeMonster('attackModifier')">
+        ATTACK training rate
+      </button>
+      <button class="sacrifice" onclick="sacrificeMonster('healthModifier')">
+        HEALTH training rate
+      </button>
+      <button class="sacrifice" onclick="sacrificeMonster('pointsModifier')">
+        Monster Dollars rate
+      </button>
     </div>
 
     <div id="game-log"></div>

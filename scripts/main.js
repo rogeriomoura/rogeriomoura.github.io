@@ -8,6 +8,10 @@ const newMonster = {
   experienceToLevelUp: 10,
   points: 0,
   enemyLevel: 1,
+  xpModifier: 1,
+  attackModifier: 2,
+  healthModifier: 5,
+  pointsModifier: 5,
 };
 
 function resetMonster() {
@@ -38,7 +42,7 @@ const gameLoopInterval = setInterval(gameLoop, 500);
 // Function to handle the game loop
 function gameLoop() {
   // Simulate passive income or automatic training over time
-  monster.experience += 1;
+  monster.experience += 1 * monster.xpModifier;
 
   // Check for level up
   if (monster.experience >= monster.experienceToLevelUp) {
@@ -69,25 +73,38 @@ function checkForPoints() {
     } else {
       document.getElementById('heal').disabled = true;
     }
+    if (monster.points >= 25) {
+      document.querySelectorAll('.sacrifice').forEach((button) => {
+        button.disabled = false;
+      });
+    } else {
+      document.querySelectorAll('.sacrifice').forEach((button) => {
+        button.disabled = true;
+      });
+    }
     document.getElementById('train-health').disabled = false;
   } else {
     document.getElementById('train-attack').disabled = true;
     document.getElementById('train-health').disabled = true;
     document.getElementById('heal').disabled = true;
+    document.querySelectorAll('.sacrifice').forEach((button) => {
+      button.disabled = true;
+    });
   }
 }
 
 function evolveAttack() {
   if (monster.points >= 2) {
     monster.points -= 2;
-    monster.attack += 2 + Math.round(monster.level * 0.5);
+    monster.attack += monster.attackModifier + Math.round(monster.level * 0.5);
     updateMonsterInfo();
   }
 }
 
 function evolveHealth() {
   if (monster.points >= 1) {
-    const healthIncrease = 5 + Math.round(monster.level * 0.5);
+    const healthIncrease =
+      monster.healthModifier + Math.round(monster.level * 0.5);
     monster.points -= 1;
     monster.maxHealth += healthIncrease;
     monster.health += healthIncrease;
@@ -171,7 +188,7 @@ function levelUp() {
   monster.attack += monster.level;
   monster.experience = 0;
   monster.experienceToLevelUp *= 2;
-  monster.points += 5;
+  monster.points += monster.pointsModifier;
   updateGameLog('Level up! Your monster is now level ' + monster.level);
 }
 
@@ -218,6 +235,43 @@ function renameMonster() {
   }
 }
 
+function sacrificeMonster(modifier) {
+  if (
+    confirm(
+      `Are you sure you want to sacrifice your monster for more ${modifier}?`
+    )
+  ) {
+    let { xpModifier, attackModifier, healthModifier, pointsModifier } =
+      monster;
+    switch (modifier) {
+      case 'xpModifier':
+        xpModifier += 1;
+        break;
+      case 'attackModifier':
+        attackModifier += 1;
+        break;
+      case 'healthModifier':
+        healthModifier += 1;
+        break;
+      case 'pointsModifier':
+        pointsModifier += 1;
+        break;
+      default:
+        break;
+    }
+    monster = createNewMonster();
+    monster = {
+      ...monster,
+      xpModifier,
+      attackModifier,
+      healthModifier,
+      pointsModifier,
+    };
+    updateMonsterInfo();
+  }
+}
+
 // Initial update of monster information
 updateMonsterInfo();
 updateEnemyInfo();
+checkForPoints();
